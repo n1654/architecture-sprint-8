@@ -59,9 +59,17 @@ def token_required(f):
             decoded_token = jwt.decode(
                 token,
                 signing_key.key,
-                algorithms=["RS256"],
-                # audience="reports-api" # "aud" claim disabled, otherwise keycloak config should be changed
+                algorithms=["RS256"]
             )
+            
+            ## PKCE: START -----------------------------------------------------
+            user_roles = decoded_token.get('realm_access', {}).get('roles', [])
+            if 'prothetic_user' not in user_roles:
+                logger.warning(f"Access denied for user {decoded_token.get('preferred_username')}. Roles: {user_roles}")
+                return jsonify({'message': 'Access denied: permissions required'}), 401
+            
+            logger.info(f"Access granted for user: {decoded_token.get('preferred_username')}")
+            ## PKCE: STOP ------------------------------------------------------
 
             logger.info(f"Token successfully decoded. Claims: {list(decoded_token.keys())}")
             logger.info(f"Token validated for user: {decoded_token.get('preferred_username', 'unknown')}")

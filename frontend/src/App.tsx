@@ -11,9 +11,33 @@ const keycloakConfig: KeycloakConfig = {
 
 const keycloak = new Keycloak(keycloakConfig);
 
+// PKCE: START -----------------------------------------------------------------
+const initOptions = {
+  pkceMethod: 'S256',
+  checkLoginIframe: false,
+  onLoad: 'login-required',
+  flow: 'standard'
+};
+
+const eventLogger = (event: string, error?: unknown) => {
+  console.log('Keycloak event:', event, error);
+};
+
+const tokenLogger = (tokens: { token?: string; refreshToken?: string }) => {
+  console.log('Keycloak tokens:', tokens);
+};
+// PKCE: STOP ------------------------------------------------------------------
+
 const App: React.FC = () => {
   return (
-    <ReactKeycloakProvider authClient={keycloak}>
+    <ReactKeycloakProvider
+      authClient={keycloak}
+// PKCE: START -----------------------------------------------------------------
+      initOptions={initOptions}
+      onEvent={eventLogger}
+      onTokens={tokenLogger}
+// PKCE: STOP ------------------------------------------------------------------
+    >
       <div className="App">
         <ReportPage />
       </div>

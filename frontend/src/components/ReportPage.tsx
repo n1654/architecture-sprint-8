@@ -26,7 +26,7 @@ const ReportPage: React.FC = () => {
 
       // Check response added
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Permissions required. HTTP error, status: ${response.status}`);
       }
 
       const data = await response.json(); // Json report
