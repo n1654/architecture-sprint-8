@@ -131,22 +131,17 @@
         "bearerOnly": true
       }
     ],
-    "clientScopes": [
+    "protocolMappers": [
       {
-        "name": "prothetic_user",
+        "name": "realm_roles_mapper",
         "protocol": "openid-connect",
-        "protocolMappers": [
-          {
-            "name": "roles",
-            "protocol": "openid-connect",
-            "protocolMapper": "oidc-usermodel-client-role-mapper",
-            "config": {
-              "claim.name": "roles",
-              "jsonType.label": "String",
-              "multivalued": "true"
-            }
-          }
-        ]
+        "protocolMapper": "oidc-usermodel-realm-role-mapper",
+        "config": {
+          "claim.name": "realm_roles",
+          "jsonType.label": "String",
+          "multivalued": "true",
+          "access.token.claim": "true"
+        }
       }
     ]
   }
